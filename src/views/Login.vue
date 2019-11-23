@@ -8,8 +8,8 @@
         <el-input type="password" v-model="loginForm.password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="resetForm('loginForm')">重置</el-button>
-        <el-button type="primary" @click="submitForm('loginForm')">登陆</el-button>
+        <el-alert v-if="errorInfo" :title="errorInfo" type="error" show-icon></el-alert>
+        <el-button type="primary" :loading="loading" @click="submitForm('loginForm')">登陆</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -29,32 +29,36 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ]
-      }
+      },
+      loading: false,
+      errorInfo: ''
     }
   },
   methods: {
     submitForm (formName) {
+      let self = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('/auth/login', this.form).then(res => {
-            console.log(res)
-            // this.$router.push('/about')
+          self.loading = true
+          axios.post('/auth/login', this.loginForm).then(res => {
+            if (res.data.code === 0) {
+              this.$router.push('/home')
+              return true
+            } else {
+              this.errorInfo = res.data.msg
+              return false
+            }
           }).catch(res => {
-            console.log(res)
+            this.errorInfo = 'network connect fail'
           }).finally(() => {
-            this.loading = false
+            self.loading = false
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
     },
     handleLogout () {
       axios.get('/auth/logout').then(res => {
