@@ -1,17 +1,19 @@
 <template>
   <div class="login">
-    <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-width="100px" class="loginForm">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="loginForm.username"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="loginForm.password"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-alert v-if="errorInfo" :title="errorInfo" type="error" show-icon></el-alert>
-        <el-button type="primary" :loading="loading" @click="submitForm('loginForm')">登陆</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row class="login-box">
+      <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-width="100px" class="loginForm">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="loginForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="loginForm.password"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-alert v-if="errorInfo" :title="errorInfo" type="error" show-icon></el-alert>
+          <el-button type="primary" :loading="loading" style="width: 100%" @click="submitForm('loginForm')">登陆</el-button>
+        </el-form-item>
+      </el-form>
+    </el-row>
   </div>
 </template>
 
@@ -83,5 +85,14 @@ export default {
 </script>
 
 <style scoped>
-
+  .login {
+    width: 100%;
+    height: 100%;
+  }
+.login-box {
+  width: 25%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
 </style>
